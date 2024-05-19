@@ -1,324 +1,558 @@
-/*建表*/
-create table wvp_device (
-                            id serial primary key ,
-                            device_id character varying(50) not null ,
-                            name character varying(255),
-                            manufacturer character varying(255),
-                            model character varying(255),
-                            firmware character varying(255),
-                            transport character varying(50),
-                            stream_mode character varying(50),
-                            on_line bool default false,
-                            register_time character varying(50),
-                            keepalive_time character varying(50),
-                            ip character varying(50),
-                            create_time character varying(50),
-                            update_time character varying(50),
-                            port integer,
-                            expires integer,
-                            subscribe_cycle_for_catalog integer DEFAULT 0,
-                            subscribe_cycle_for_mobile_position integer DEFAULT 0,
-                            mobile_position_submission_interval integer DEFAULT 5,
-                            subscribe_cycle_for_alarm integer DEFAULT 0,
-                            host_address character varying(50),
-                            charset character varying(50),
-                            ssrc_check bool default false,
-                            geo_coord_sys character varying(50),
-                            media_server_id character varying(50),
-                            custom_name character varying(255),
-                            sdp_ip character varying(50),
-                            local_ip character varying(50),
-                            password character varying(255),
-                            as_message_channel bool default false,
-                            keepalive_interval_time integer,
-                            switch_primary_sub_stream bool default false,
-                            broadcast_push_after_ack bool default false,
-                            constraint uk_device_device unique (device_id)
-);
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
-create table wvp_device_alarm (
-                                  id serial primary key ,
-                                  device_id character varying(50) not null,
-                                  channel_id character varying(50) not null,
-                                  alarm_priority character varying(50),
-                                  alarm_method character varying(50),
-                                  alarm_time character varying(50),
-                                  alarm_description character varying(255),
-                                  longitude double precision,
-                                  latitude double precision,
-                                  alarm_type character varying(50),
-                                  create_time character varying(50) not null
-);
+-- ----------------------------
+-- Table structure for wvp_cloud_record
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_cloud_record`;
+CREATE TABLE `wvp_cloud_record` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `app` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stream` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `call_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `start_time` bigint(20) DEFAULT NULL,
+  `end_time` bigint(20) DEFAULT NULL,
+  `media_server_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `file_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `folder` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `file_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `collect` tinyint(1) DEFAULT '0',
+  `file_size` bigint(20) DEFAULT NULL,
+  `time_len` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `uk_stream_push_app_stream_path` (`app`,`stream`,`file_path`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-create table wvp_device_channel (
-                                    id serial primary key ,
-                                    channel_id character varying(50) not null,
-                                    name character varying(255),
-                                    custom_name character varying(255),
-                                    manufacture character varying(50),
-                                    model character varying(50),
-                                    owner character varying(50),
-                                    civil_code character varying(50),
-                                    block character varying(50),
-                                    address character varying(50),
-                                    parent_id character varying(50),
-                                    safety_way integer,
-                                    register_way integer,
-                                    cert_num character varying(50),
-                                    certifiable integer,
-                                    err_code integer,
-                                    end_time character varying(50),
-                                    secrecy character varying(50),
-                                    ip_address character varying(50),
-                                    port integer,
-                                    password character varying(255),
-                                    ptz_type integer,
-                                    custom_ptz_type integer,
-                                    status bool default false,
-                                    longitude double precision,
-                                    custom_longitude double precision,
-                                    latitude double precision,
-                                    custom_latitude double precision,
-                                    stream_id character varying(255),
-                                    device_id character varying(50) not null,
-                                    parental character varying(50),
-                                    has_audio bool default false,
-                                    create_time character varying(50) not null,
-                                    update_time character varying(50) not null,
-                                    sub_count integer,
-                                    longitude_gcj02 double precision,
-                                    latitude_gcj02 double precision,
-                                    longitude_wgs84 double precision,
-                                    latitude_wgs84 double precision,
-                                    business_group_id character varying(50),
-                                    gps_time character varying(50),
-                                    stream_identification character varying(50),
-                                    constraint uk_wvp_device_channel_unique_device_channel unique (device_id, channel_id)
-);
+-- ----------------------------
+-- Records of wvp_cloud_record
+-- ----------------------------
+BEGIN;
+COMMIT;
 
-create table wvp_device_mobile_position (
-                                            id serial primary key,
-                                            device_id character varying(50) not null,
-                                            channel_id character varying(50) not null,
-                                            device_name character varying(255),
-                                            time character varying(50),
-                                            longitude double precision,
-                                            latitude double precision,
-                                            altitude double precision,
-                                            speed double precision,
-                                            direction double precision,
-                                            report_source character varying(50),
-                                            longitude_gcj02 double precision,
-                                            latitude_gcj02 double precision,
-                                            longitude_wgs84 double precision,
-                                            latitude_wgs84 double precision,
-                                            create_time character varying(50)
-);
+-- ----------------------------
+-- Table structure for wvp_device
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_device`;
+CREATE TABLE `wvp_device` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `device_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `manufacturer` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `model` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `firmware` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `transport` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stream_mode` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `on_line` tinyint(1) DEFAULT '0',
+  `register_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `keepalive_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `update_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `port` int(11) DEFAULT NULL,
+  `expires` int(11) DEFAULT NULL,
+  `subscribe_cycle_for_catalog` int(11) DEFAULT '0',
+  `subscribe_cycle_for_mobile_position` int(11) DEFAULT '0',
+  `mobile_position_submission_interval` int(11) DEFAULT '5',
+  `subscribe_cycle_for_alarm` int(11) DEFAULT '0',
+  `host_address` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `charset` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ssrc_check` tinyint(1) DEFAULT '0',
+  `geo_coord_sys` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `media_server_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `custom_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sdp_ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `local_ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `as_message_channel` tinyint(1) DEFAULT '0',
+  `keepalive_interval_time` int(11) DEFAULT NULL,
+  `broadcast_push_after_ack` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `uk_device_device` (`device_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-create table wvp_gb_stream (
-                               gb_stream_id serial primary key,
-                               app character varying(255) not null,
-                               stream character varying(255) not null,
-                               gb_id character varying(50) not null,
-                               name character varying(255),
-                               longitude double precision,
-                               latitude double precision,
-                               stream_type character varying(50),
-                               media_server_id character varying(50),
-                               create_time character varying(50),
-                               constraint uk_gb_stream_unique_gb_id unique (gb_id),
-                               constraint uk_gb_stream_unique_app_stream unique (app, stream)
-);
+-- ----------------------------
+-- Records of wvp_device
+-- ----------------------------
+BEGIN;
+COMMIT;
 
-create table wvp_log (
-                         id serial primary key ,
-                         name character varying(50),
-                         type character varying(50),
-                         uri character varying(200),
-                         address character varying(50),
-                         result character varying(50),
-                         timing bigint,
-                         username character varying(50),
-                         create_time character varying(50)
-);
+-- ----------------------------
+-- Table structure for wvp_device_alarm
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_device_alarm`;
+CREATE TABLE `wvp_device_alarm` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `device_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `channel_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alarm_priority` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `alarm_method` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `alarm_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `alarm_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `alarm_type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-create table wvp_media_server (
-                                  id character varying(255) primary key ,
-                                  ip character varying(50),
-                                  hook_ip character varying(50),
-                                  sdp_ip character varying(50),
-                                  stream_ip character varying(50),
-                                  http_port integer,
-                                  http_ssl_port integer,
-                                  rtmp_port integer,
-                                  rtmp_ssl_port integer,
-                                  rtp_proxy_port integer,
-                                  rtsp_port integer,
-                                  rtsp_ssl_port integer,
-                                  auto_config bool default false,
-                                  secret character varying(50),
-                                  rtp_enable bool default false,
-                                  rtp_port_range character varying(50),
-                                  send_rtp_port_range character varying(50),
-                                  record_assist_port integer,
-                                  default_server bool default false,
-                                  create_time character varying(50),
-                                  update_time character varying(50),
-                                  hook_alive_interval integer,
-                                  record_path character varying(255),
-                                  record_day integer default 7,
-                                  constraint uk_media_server_unique_ip_http_port unique (ip, http_port)
-);
+-- ----------------------------
+-- Records of wvp_device_alarm
+-- ----------------------------
+BEGIN;
+COMMIT;
 
-create table wvp_platform (
-                              id serial primary key ,
-                              enable bool default false,
-                              name character varying(255),
-                              server_gb_id character varying(50),
-                              server_gb_domain character varying(50),
-                              server_ip character varying(50),
-                              server_port integer,
-                              device_gb_id character varying(50),
-                              device_ip character varying(50),
-                              device_port character varying(50),
-                              username character varying(255),
-                              password character varying(50),
-                              expires character varying(50),
-                              keep_timeout character varying(50),
-                              transport character varying(50),
-                              character_set character varying(50),
-                              catalog_id character varying(50),
-                              ptz bool default false,
-                              rtcp bool default false,
-                              status bool default false,
-                              start_offline_push bool default false,
-                              administrative_division character varying(50),
-                              catalog_group integer,
-                              create_time character varying(50),
-                              update_time character varying(50),
-                              as_message_channel bool default false,
-                              auto_push_channel bool default false,
-                              constraint uk_platform_unique_server_gb_id unique (server_gb_id)
-);
+-- ----------------------------
+-- Table structure for wvp_device_channel
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_device_channel`;
+CREATE TABLE `wvp_device_channel` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `channel_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `custom_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `manufacture` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `model` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `owner` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `civil_code` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `block` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `parent_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `safety_way` int(11) DEFAULT NULL,
+  `register_way` int(11) DEFAULT NULL,
+  `cert_num` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `certifiable` int(11) DEFAULT NULL,
+  `err_code` int(11) DEFAULT NULL,
+  `end_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `secrecy` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ip_address` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `port` int(11) DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ptz_type` int(11) DEFAULT NULL,
+  `custom_ptz_type` int(11) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `longitude` double DEFAULT NULL,
+  `custom_longitude` double DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `custom_latitude` double DEFAULT NULL,
+  `stream_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `device_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `parental` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `has_audio` tinyint(1) DEFAULT '0',
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `update_time` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sub_count` int(11) DEFAULT NULL,
+  `longitude_gcj02` double DEFAULT NULL,
+  `latitude_gcj02` double DEFAULT NULL,
+  `longitude_wgs84` double DEFAULT NULL,
+  `latitude_wgs84` double DEFAULT NULL,
+  `business_group_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gps_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stream_identification` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `uk_wvp_device_channel_unique_device_channel` (`device_id`,`channel_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-create table wvp_platform_catalog (
-                                      id character varying(50),
-                                      platform_id character varying(50),
-                                      name character varying(255),
-                                      parent_id character varying(50),
-                                      civil_code character varying(50),
-                                      business_group_id character varying(50),
-                                      constraint uk_platform_catalog_id_platform_id unique (id, platform_id)
-);
+-- ----------------------------
+-- Records of wvp_device_channel
+-- ----------------------------
+BEGIN;
+COMMIT;
 
-create table wvp_platform_gb_channel (
-                                         id serial primary key ,
-                                         platform_id character varying(50),
-                                         catalog_id character varying(50),
-                                         device_channel_id integer,
-                                         constraint uk_platform_gb_channel_platform_id_catalog_id_device_channel_id unique (platform_id, catalog_id, device_channel_id)
-);
+-- ----------------------------
+-- Table structure for wvp_device_mobile_position
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_device_mobile_position`;
+CREATE TABLE `wvp_device_mobile_position` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `device_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `channel_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `device_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `altitude` double DEFAULT NULL,
+  `speed` double DEFAULT NULL,
+  `direction` double DEFAULT NULL,
+  `report_source` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `longitude_gcj02` double DEFAULT NULL,
+  `latitude_gcj02` double DEFAULT NULL,
+  `longitude_wgs84` double DEFAULT NULL,
+  `latitude_wgs84` double DEFAULT NULL,
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-create table wvp_platform_gb_stream (
-                                        id serial primary key,
-                                        platform_id character varying(50),
-                                        catalog_id character varying(50),
-                                        gb_stream_id integer,
-                                        constraint uk_platform_gb_stream_platform_id_catalog_id_gb_stream_id unique (platform_id, catalog_id, gb_stream_id)
-);
+-- ----------------------------
+-- Records of wvp_device_mobile_position
+-- ----------------------------
+BEGIN;
+COMMIT;
 
-create table wvp_stream_proxy (
-                                  id serial primary key,
-                                  type character varying(50),
-                                  app character varying(255),
-                                  stream character varying(255),
-                                  url character varying(255),
-                                  src_url character varying(255),
-                                  dst_url character varying(255),
-                                  timeout_ms integer,
-                                  ffmpeg_cmd_key character varying(255),
-                                  rtp_type character varying(50),
-                                  media_server_id character varying(50),
-                                  enable_audio bool default false,
-                                  enable_mp4 bool default false,
-                                  enable bool default false,
-                                  status boolean,
-                                  enable_remove_none_reader bool default false,
-                                  create_time character varying(50),
-                                  name character varying(255),
-                                  update_time character varying(50),
-                                  stream_key character varying(255),
-                                  enable_disable_none_reader bool default false,
-                                  constraint uk_stream_proxy_app_stream unique (app, stream)
-);
+-- ----------------------------
+-- Table structure for wvp_gb_stream
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_gb_stream`;
+CREATE TABLE `wvp_gb_stream` (
+  `gb_stream_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `app` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `stream` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gb_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
+  `stream_type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `media_server_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`gb_stream_id`),
+  UNIQUE KEY `gb_stream_id` (`gb_stream_id`),
+  UNIQUE KEY `uk_gb_stream_unique_gb_id` (`gb_id`),
+  UNIQUE KEY `uk_gb_stream_unique_app_stream` (`app`,`stream`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-create table wvp_stream_push (
-                                 id serial primary key,
-                                 app character varying(255),
-                                 stream character varying(255),
-                                 total_reader_count character varying(50),
-                                 origin_type integer,
-                                 origin_type_str character varying(50),
-                                 create_time character varying(50),
-                                 alive_second integer,
-                                 media_server_id character varying(50),
-                                 server_id character varying(50),
-                                 push_time character varying(50),
-                                 status bool default false,
-                                 update_time character varying(50),
-                                 push_ing bool default false,
-                                 self bool default false,
-                                 constraint uk_stream_push_app_stream unique (app, stream)
-);
-create table wvp_cloud_record (
-                                  id serial primary key,
-                                  app character varying(255),
-                                  stream character varying(255),
-                                  call_id character varying(255),
-                                  start_time bigint,
-                                  end_time bigint,
-                                  media_server_id character varying(50),
-                                  file_name character varying(255),
-                                  folder character varying(255),
-                                  file_path character varying(255),
-                                  collect bool default false,
-                                  file_size bigint,
-                                  time_len bigint,
-                                  constraint uk_stream_push_app_stream_path unique (app, stream, file_path)
-);
+-- ----------------------------
+-- Records of wvp_gb_stream
+-- ----------------------------
+BEGIN;
+COMMIT;
 
-create table wvp_user (
-                          id serial primary key,
-                          username character varying(255),
-                          password character varying(255),
-                          role_id integer,
-                          create_time character varying(50),
-                          update_time character varying(50),
-                          push_key character varying(50),
-                          constraint uk_user_username unique (username)
-);
+-- ----------------------------
+-- Table structure for wvp_log
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_log`;
+CREATE TABLE `wvp_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `uri` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `result` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `timing` bigint(20) DEFAULT NULL,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-create table wvp_user_role (
-                               id serial primary key,
-                               name character varying(50),
-                               authority character varying(50),
-                               create_time character varying(50),
-                               update_time character varying(50)
-);
-create table wvp_resources_tree (
-                                    id serial primary key ,
-                                    is_catalog bool default true,
-                                    device_channel_id integer ,
-                                    gb_stream_id integer,
-                                    name character varying(255),
-                                    parentId integer,
-                                    path character varying(255)
-);
+-- ----------------------------
+-- Records of wvp_log
+-- ----------------------------
+BEGIN;
+COMMIT;
 
+-- ----------------------------
+-- Table structure for wvp_media_server
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_media_server`;
+CREATE TABLE `wvp_media_server` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `hook_ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sdp_ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stream_ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `http_port` int(11) DEFAULT NULL,
+  `http_ssl_port` int(11) DEFAULT NULL,
+  `rtmp_port` int(11) DEFAULT NULL,
+  `rtmp_ssl_port` int(11) DEFAULT NULL,
+  `rtp_proxy_port` int(11) DEFAULT NULL,
+  `rtsp_port` int(11) DEFAULT NULL,
+  `rtsp_ssl_port` int(11) DEFAULT NULL,
+  `flv_port` int(11) DEFAULT NULL,
+  `flv_ssl_port` int(11) DEFAULT NULL,
+  `ws_flv_port` int(11) DEFAULT NULL,
+  `ws_flv_ssl_port` int(11) DEFAULT NULL,
+  `auto_config` tinyint(1) DEFAULT '0',
+  `secret` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'zlm',
+  `rtp_enable` tinyint(1) DEFAULT '0',
+  `rtp_port_range` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `send_rtp_port_range` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `record_assist_port` int(11) DEFAULT NULL,
+  `default_server` tinyint(1) DEFAULT '0',
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `update_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `hook_alive_interval` int(11) DEFAULT NULL,
+  `record_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `record_day` int(11) DEFAULT '7',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_media_server_unique_ip_http_port` (`ip`,`http_port`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*初始数据*/
-INSERT INTO wvp_user VALUES (1, 'admin','21232f297a57a5a743894a0e4a801fc3',1,'2021-04-13 14:14:57','2021-04-13 14:14:57','3e80d1762a324d5b0ff636e0bd16f1e3');
-INSERT INTO wvp_user_role VALUES (1, 'admin','0','2021-04-13 14:14:57','2021-04-13 14:14:57');
+-- ----------------------------
+-- Records of wvp_media_server
+-- ----------------------------
+BEGIN;
+INSERT INTO `wvp_media_server` (`id`, `ip`, `hook_ip`, `sdp_ip`, `stream_ip`, `http_port`, `http_ssl_port`, `rtmp_port`, `rtmp_ssl_port`, `rtp_proxy_port`, `rtsp_port`, `rtsp_ssl_port`, `flv_port`, `flv_ssl_port`, `ws_flv_port`, `ws_flv_ssl_port`, `auto_config`, `secret`, `type`, `rtp_enable`, `rtp_port_range`, `send_rtp_port_range`, `record_assist_port`, `default_server`, `create_time`, `update_time`, `hook_alive_interval`, `record_path`, `record_day`) VALUES ('zlmediakit-local', '192.168.2.134', '192.168.2.134', '192.168.2.134', '192.168.2.134', 9092, 1443, 0, 0, 0, 0, 0, 9092, 1443, 9092, 1443, 1, '10000', 'zlm', 1, '50000,50300', '50000,50300', 18081, 1, '2024-05-18 22:40:39', '2024-05-18 23:29:02', 10, '', 7);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for wvp_platform
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_platform`;
+CREATE TABLE `wvp_platform` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `enable` tinyint(1) DEFAULT '0',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `server_gb_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `server_gb_domain` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `server_ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `server_port` int(11) DEFAULT NULL,
+  `device_gb_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `device_ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `device_port` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `expires` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `keep_timeout` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `transport` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `character_set` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `catalog_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ptz` tinyint(1) DEFAULT '0',
+  `rtcp` tinyint(1) DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `start_offline_push` tinyint(1) DEFAULT '0',
+  `administrative_division` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `catalog_group` int(11) DEFAULT NULL,
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `update_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `as_message_channel` tinyint(1) DEFAULT '0',
+  `auto_push_channel` tinyint(1) DEFAULT '0',
+  `send_stream_ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `uk_platform_unique_server_gb_id` (`server_gb_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of wvp_platform
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for wvp_platform_catalog
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_platform_catalog`;
+CREATE TABLE `wvp_platform_catalog` (
+  `id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `platform_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `parent_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `civil_code` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `business_group_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  UNIQUE KEY `uk_platform_catalog_id_platform_id` (`id`,`platform_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of wvp_platform_catalog
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for wvp_platform_gb_channel
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_platform_gb_channel`;
+CREATE TABLE `wvp_platform_gb_channel` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `platform_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `catalog_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `device_channel_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `uk_platform_gb_channel_platform_id_catalog_id_device_channel_id` (`platform_id`,`catalog_id`,`device_channel_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of wvp_platform_gb_channel
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for wvp_platform_gb_stream
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_platform_gb_stream`;
+CREATE TABLE `wvp_platform_gb_stream` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `platform_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `catalog_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gb_stream_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `uk_platform_gb_stream_platform_id_catalog_id_gb_stream_id` (`platform_id`,`catalog_id`,`gb_stream_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of wvp_platform_gb_stream
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for wvp_resources_tree
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_resources_tree`;
+CREATE TABLE `wvp_resources_tree` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `is_catalog` tinyint(1) DEFAULT '1',
+  `device_channel_id` int(11) DEFAULT NULL,
+  `gb_stream_id` int(11) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `parentId` int(11) DEFAULT NULL,
+  `path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of wvp_resources_tree
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for wvp_stream_proxy
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_stream_proxy`;
+CREATE TABLE `wvp_stream_proxy` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `app` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stream` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `src_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `dst_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `timeout_ms` int(11) DEFAULT NULL,
+  `ffmpeg_cmd_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `rtp_type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `media_server_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `enable_audio` tinyint(1) DEFAULT '0',
+  `enable_mp4` tinyint(1) DEFAULT '0',
+  `enable` tinyint(1) DEFAULT '0',
+  `status` tinyint(1) DEFAULT NULL,
+  `enable_remove_none_reader` tinyint(1) DEFAULT '0',
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `update_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stream_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `enable_disable_none_reader` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `uk_stream_proxy_app_stream` (`app`,`stream`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of wvp_stream_proxy
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for wvp_stream_push
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_stream_push`;
+CREATE TABLE `wvp_stream_push` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `app` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stream` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `total_reader_count` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `origin_type` int(11) DEFAULT NULL,
+  `origin_type_str` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `alive_second` int(11) DEFAULT NULL,
+  `media_server_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `server_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `push_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `update_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `push_ing` tinyint(1) DEFAULT '0',
+  `self` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `uk_stream_push_app_stream` (`app`,`stream`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of wvp_stream_push
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for wvp_user
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_user`;
+CREATE TABLE `wvp_user` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `update_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `push_key` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `uk_user_username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of wvp_user
+-- ----------------------------
+BEGIN;
+INSERT INTO `wvp_user` (`id`, `username`, `password`, `role_id`, `create_time`, `update_time`, `push_key`) VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1, '2021-04-13 14:14:57', '2021-04-13 14:14:57', '3e80d1762a324d5b0ff636e0bd16f1e3');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for wvp_user_api_key
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_user_api_key`;
+CREATE TABLE `wvp_user_api_key` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) DEFAULT NULL,
+  `app` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `api_key` text COLLATE utf8mb4_unicode_ci,
+  `expired_at` bigint(20) DEFAULT NULL,
+  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `enable` tinyint(1) DEFAULT '1',
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `update_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of wvp_user_api_key
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for wvp_user_role
+-- ----------------------------
+DROP TABLE IF EXISTS `wvp_user_role`;
+CREATE TABLE `wvp_user_role` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `authority` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `create_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `update_time` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of wvp_user_role
+-- ----------------------------
+BEGIN;
+INSERT INTO `wvp_user_role` (`id`, `name`, `authority`, `create_time`, `update_time`) VALUES (1, 'admin', '0', '2021-04-13 14:14:57', '2021-04-13 14:14:57');
+COMMIT;
+
+SET FOREIGN_KEY_CHECKS = 1;
 
 
 
