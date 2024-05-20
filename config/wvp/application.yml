@@ -89,7 +89,7 @@ sip:
   # [可选]
   id: ${SIP_ID:44010200492000000001}
   # [可选] 默认设备认证密码，后续扩展使用设备单独密码, 移除密码将不进行校验
-  password: ${SIP_PASSWORD:admin123}
+  password: ${SIP_PASSWORD:SIP_PASSWORD}
   # [可选] 国标级联注册失败，再次发起注册的时间间隔。 默认60秒
   register-time-interval: 60
   # [可选] 云台控制速度
@@ -111,7 +111,7 @@ jt1078:
 #zlm 默认服务器配置
 media:
   # [必须修改] zlm服务器唯一id，用于触发hook时区别是哪台服务器,general.mediaServerId
-  id: 841SQ0rg171N3zk4
+  id: qqt1
   # [必须修改] zlm服务器的内网IP
   ip: ${ZLM_IP}
   # [可选] 返回流地址时的ip，置空使用 media.ip
@@ -121,7 +121,7 @@ media:
   # [可选] zlm服务器的hook所使用的IP, 默认使用sip.ip
   hook-ip: ${WVP_IP}
   # [必须修改] zlm服务器的http.port
-  http-port: ${ZLM_PORT:80}
+  http-port: ${ZLM_PORT:6080}
   # [可选] zlm服务器的http.sslport, 置空使用zlm配置文件配置
   http-ssl-port:
   # [可选] zlm服务器的rtmp.port, 置空使用zlm配置文件配置
